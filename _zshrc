@@ -1,0 +1,269 @@
+#-----------------------------
+# command setting
+#-----------------------------
+#cdでpushdする
+setopt auto_pushd
+
+#pushdで同じディレクトリを重複してpushしない
+setopt pushd_ignore_dups
+
+#ディレクトリ名だけで移動できる
+setopt auto_cd
+
+## ファイル名で #, ~, ^ の 3 文字を正規表現として扱う
+#setopt extended_glob
+
+#-----------------------------
+# zstyle
+#-----------------------------
+#補完時に大文字小文字を区別しない
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+zstyle ':completion:*:default' menu select
+
+## 補完候補に色を付ける。
+### "": 空文字列はデフォルト値を使うという意味。
+zstyle ':completion:*:default' list-colors ""
+
+## 補完方法毎にグループ化する。
+### 補完方法の表示方法
+###   %B...%b: 「...」を太字にする。
+###   %d: 補完方法のラベル
+zstyle ':completion:*' format '%B%d%b'
+zstyle ':completion:*' group-name ''
+
+zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
+/usr/sbin /usr/bin /sbin /bin /usr/X11R6/bin
+
+
+#-----------------------------
+# Parameter settings.
+#-----------------------------
+export SVN_EDITOR="vim"
+export LSCOLORS=gxfxcxdxbxegedabagacad
+
+
+#-----------------------------
+#alias setting
+#-----------------------------
+alias v='open -a "MacVim.app"'
+alias w='open -a "WebStorm 3.0.app"'
+alias f='open -a "ForkLift.app"'
+#alias ps='open -a "Adobe Photoshop CS5.1.app"'
+alias o='open'
+alias c='cat'
+#alias svnadd='svn add --force *'
+#alias svnadd='svn st | grep "^\?" | awk "{print $2}" | xargs svn add'
+#alias svnaddci='svn st | grep "^A" | awk "{print $2}" | xargs svn ci -m "added"'
+alias cp='gcp'
+alias ll='ls -l'
+alias la='ls -a'
+alias lla='la -l'
+alias ls='ls -GF'
+alias pwdcp='pwd | pbcopy'
+alias rehosts='sudo vi /etc/hosts'
+alias revhosts='sudo vi /etc/apache2/extra/httpd-vhosts.conf'
+alias rezsh='v ~/.zshrc'
+alias grep='grep --color=always'
+alias sastart='sass --watch .:.. > /dev/null 2> /dev/null < /dev/null &'
+alias ims="mdls -name kMDItemFSName -name kMDItemPixelWidth -name kMDItemPixelHeight"
+alias p='qlmanage -p "$@" >& /dev/null'
+#compass watch --output-style compressed sass/style.scss #一行に圧縮
+alias cmpstart='compass watch --output-style compressed ./ > /dev/null 2> /dev/null < /dev/null &'
+alias cmpstart2='compass watch ./ > /dev/null 2> /dev/null < /dev/null &'
+alias cmpcreate='compass create --sass-dir "scss" --css-dir "css" --javascripts-dir "js" --images-dir "img"'
+#iPhone with acceraleter.
+alias iphonea='CA_COLOR_OPAQUE=1 /Developer/Platforms/iPhoneSimulator.platform/Developer/Applications/iPhone\ Simulator.app/Contents/MacOS/iPhone\ Simulator'
+#synergys start command.
+alias systart='sudo synergys --config ~/synergy.conf'
+#pipe alias
+alias -g G='| grep'
+alias -g AS='| awk'
+alias -g X='| xargs'
+
+#for Git
+alias gst='git st -s -b' 
+
+#for Java
+alias java='java -Dfile.encoding=UTF-8'
+alias javac='javac -J-Dfile.encoding=utf-8'
+
+#---------------------------
+# for project directories.
+alias pme='cd ~/works/html/sets'
+
+#directory
+#CDPATH=:~
+
+#key bind
+bindkey -v
+
+###############################################
+# Functions
+###############################################
+jsdoc() {
+  JSDOCDIR='/Users/hiruma-kazuya/MyDesktop/tools/jsdoc_toolkit-2.4.0/jsdoc-toolkit'
+  FROM=$1
+  shift
+  TO=$1
+  java -jar $JSDOCDIR/jsrun.jar $JSDOCDIR/app/run.js $FROM -t=$JSDOCDIR/templates/jsdoc -d=$PWD/../js-document/$TO -a
+}
+
+renameOv() {
+  local suffix="o"
+
+  while getopts ":s:" opt; do
+    case $opt in
+      s ) if [ -n "$OPTARG" ]; then
+            suffix=$OPTARG
+          elif [ -z "$OPTARG" ]; then
+            echo "No option argument."
+            return 1
+          fi;;
+    esac
+  done
+
+  shift $(($OPTIND - 1))
+
+
+  if [ -z $1 ]; then
+    echo "No filename argument."
+    return 1
+  fi
+
+  for file in "$@"
+  do
+    if [ ! -d "$file" ]; then
+      ex=${file##*.}
+
+      filename=${file%.*}
+      outname=${filename}_${suffix}.${ex}
+      mv $file $outname
+    fi
+  done
+}
+
+svnadd() {
+  filelist=$(svn st | grep '^?' | awk '{print $2}' | tr '\012' ' ')
+  eval svn add $filelist
+}
+
+svnac() {
+  filelist=$(svn st | grep '^A' | awk '{print $2}')
+  filelist=$(echo ${filelist} | tr '\012' ' ')
+  eval svn ci -m 'added' $filelist
+}
+
+svnexci() {
+  local type=''
+  local message=''
+
+  while getopts ":t:m:" opt; do
+    case $opt in
+      t ) if [ -n "$OPTARG" ]; then
+            type=$OPTARG
+          fi;;
+      m ) if [ -n "$OPTARG" ]; then
+            message=$OPTARG
+          fi;;
+    esac
+  done
+
+  if [ -z "$message" ]; then
+    echo "No commit message."
+    return 1
+  fi
+
+  shift $(($OPTIND - 1))
+
+  filelist=$(svn st | grep "^$type" | awk '{print $2}')
+  filelist=$(echo ${filelist} | tr '\012' ' ')
+  eval svn ci -m "$message" $filelist
+}
+
+rename() {
+  local from=$1
+  local to=$2
+
+  if [ -z "$from" -o -z "$to" ]; then
+    echo "dose not enogh arguments."
+    return 1
+  fi
+
+  for FILE in ./*
+  do
+      mv $FILE $(echo $FILE | sed -e "s/$from/$to/") 
+  done
+}
+
+
+#PROMPT="%/%% "
+#PROMPT2="%_%% "
+#SPROMPT="%r is correct? [n,y,a,e]: "
+
+#set prompt color
+PROMPT=$'%{\e[33m%}%~%{\e[00m%}
+%{\e[36m%}%n@%m$%{\e[00m%} '
+#RPROMPT=$'%{\e[33m%}[%~]%{\e[m%}'
+
+autoload -U colors; colors
+
+function rprompt-git-current-branch {
+        local name st color
+
+        if [[ "$PWD" =~ '/\.git(/.*)?$' ]]; then
+                return
+        fi
+        name=$(basename "`git symbolic-ref HEAD 2> /dev/null`")
+        if [[ -z $name ]]; then
+                return
+        fi
+        st=`git status 2> /dev/null`
+        if [[ -n `echo "$st" | grep "^nothing to"` ]]; then
+                color=${fg[green]}
+        elif [[ -n `echo "$st" | grep "^nothing added"` ]]; then
+                color=${fg[yellow]}
+        elif [[ -n `echo "$st" | grep "^# Untracked"` ]]; then
+                color=${fg_bold[red]}
+        else
+                color=${fg[red]}
+        fi
+
+        # %{...%} は囲まれた文字列がエスケープシーケンスであることを明示する
+        # これをしないと右プロンプトの位置がずれる
+        echo "%{$color%}$name%{$reset_color%} "
+}
+
+# プロンプトが表示されるたびにプロンプト文字列を評価、置換する
+setopt prompt_subst
+
+RPROMPT='[`rprompt-git-current-branch`%~]'
+
+###############################################
+# autoload                                    #
+###############################################
+autoload zmv
+alias zmv='noglob zmv -W'
+autoload -U compinit
+compinit
+autoload colors
+colors
+
+
+###############################################
+# 履歴関係                                    #
+###############################################
+HISTFILE="$HOME/.zsh_history"
+
+HISTSIZE=100000
+SAVEHIST=100000
+
+setopt hist_ignore_dups
+setopt share_history
+setopt hist_ignore_space
+
+autoload history-search-end
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+bindkey -e
+bindkey "^P" history-beginning-search-backward-end
+bindkey "^N" history-beginning-search-forward-end
