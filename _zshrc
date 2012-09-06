@@ -1,3 +1,15 @@
+#---------------------------
+# for project directories.
+alias de1='cd ~/dev/env1'
+alias de2='cd ~/dev/env2'
+alias de3='cd ~/dev/env3'
+alias de4='cd ~/dev/env4'
+
+
+
+
+
+
 #-----------------------------
 # command setting
 #-----------------------------
@@ -34,12 +46,14 @@ zstyle ':completion:*' group-name ''
 zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
 /usr/sbin /usr/bin /sbin /bin /usr/X11R6/bin
 
+zstyle ':vcs_info:bzr:*' use-simple true
+
 
 #-----------------------------
 # Parameter settings.
 #-----------------------------
 export SVN_EDITOR="vim"
-export LSCOLORS=gxfxcxdxbxegedabagacad
+export LSCOLORS=cxfxcxdxbxegedabagacad
 
 
 #-----------------------------
@@ -56,7 +70,7 @@ alias c='cat'
 #alias svnaddci='svn st | grep "^A" | awk "{print $2}" | xargs svn ci -m "added"'
 alias cp='gcp'
 alias ll='ls -l'
-alias la='ls -a'
+alias la='ls -la'
 alias lla='la -l'
 alias ls='ls -GF'
 alias pwdcp='pwd | pbcopy'
@@ -87,9 +101,8 @@ alias gst='git st -s -b'
 alias java='java -Dfile.encoding=UTF-8'
 alias javac='javac -J-Dfile.encoding=utf-8'
 
-#---------------------------
-# for project directories.
-alias pme='cd ~/works/html/sets'
+#for Cordova
+alias cdvcreate='~/Tools/Cordova/bin/create'
 
 #directory
 #CDPATH=:~
@@ -243,7 +256,7 @@ RPROMPT='[`rprompt-git-current-branch`%~]'
 ###############################################
 autoload zmv
 alias zmv='noglob zmv -W'
-autoload -U compinit
+#autoload -U compinit -> これを入れると git diff などのコマンドの補完が遅くなる。
 compinit
 autoload colors
 colors
@@ -267,3 +280,18 @@ zle -N history-beginning-search-forward-end history-search-end
 bindkey -e
 bindkey "^P" history-beginning-search-backward-end
 bindkey "^N" history-beginning-search-forward-end
+
+
+# nvm と指定されたバージョンの Node.js がインストール済みの場合だけ
+# 設定を有効にする
+#if [[ -f ~/.nvm/nvm.sh ]]; then
+#  source ~/.nvm/nvm.sh
+#
+#  if which nvm >/dev/null 2>&1 ;then
+#    _nodejs_use_version="v0.6.17"
+#    if nvm ls | grep -F -e "${_nodejs_use_version}";then
+#      nvm use "${_nodejs_use_version}" >/dev/null
+#    fi  >/dev/null 2>&1
+#    unset _nodejs_use_version
+#  fi
+#fi
