@@ -9,7 +9,6 @@ alias de4='cd ~/dev/env4'
 
 
 
-
 #-----------------------------
 # command setting
 #-----------------------------
@@ -256,7 +255,7 @@ RPROMPT='[`rprompt-git-current-branch`%~]'
 ###############################################
 autoload zmv
 alias zmv='noglob zmv -W'
-#autoload -U compinit -> これを入れると git diff などのコマンドの補完が遅くなる。
+autoload -Uz compinit
 compinit
 autoload colors
 colors
@@ -295,3 +294,8 @@ bindkey "^N" history-beginning-search-forward-end
 #    unset _nodejs_use_version
 #  fi
 #fi
+
+# git completion
+autoload -U bashcompinit
+bashcompinit
+source ~/git-completion.bash
