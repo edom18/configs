@@ -8,7 +8,6 @@ alias de4='cd ~/dev/env4'
 
 
 
-
 #-----------------------------
 # command setting
 #-----------------------------
@@ -59,7 +58,7 @@ export LSCOLORS=cxfxcxdxbxegedabagacad
 #alias setting
 #-----------------------------
 alias v='open -a "MacVim.app"'
-alias w='open -a "WebStorm 3.0.app"'
+alias w='open -a "WebStorm.app"'
 alias f='open -a "ForkLift.app"'
 #alias ps='open -a "Adobe Photoshop CS5.1.app"'
 alias o='open'
@@ -95,6 +94,7 @@ alias -g X='| xargs'
 
 #for Git
 alias gst='git st -s -b' 
+alias glgg='git logg'
 
 #for Java
 alias java='java -Dfile.encoding=UTF-8'
@@ -299,3 +299,12 @@ bindkey "^N" history-beginning-search-forward-end
 autoload -U bashcompinit
 bashcompinit
 source ~/git-completion.bash
+
+
+
+
+autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
+add-zsh-hook chpwd chpwd_recent_dirs
+zstyle ':chpwd:*' recent-dirs-max 5000
+zstyle ':chpwd:*' recent-dirs-default yes
+zstyle ':completion:*' recent-dirs-insert both
