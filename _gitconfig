@@ -1,6 +1,6 @@
 [user]
-	name = ***
-	email = ***
+	name = edom18
+	email = edo.m18@gmail.com
 
 [color]
   # colorの設定(以下のコマンドは自動で色つける)
@@ -12,7 +12,7 @@
 [push]
   default = tracking       # defaultのpush先はtrackingしているリポジトリ
 [core]
-  excludesfile = ~/.gitignore  # globalな.gitignoreの指定
+	excludesfile = /Users/hiruma-kazuya/.gitignore
   autocrlf = input                 # CRLFを自動変換
 [alias]
   st = status
@@ -31,6 +31,7 @@
   ba = branch -a           # originも含めた全てのbranchを表示
   bm = branch --merged     # merge済みのbranchを表示
   bn = branch --no-merged  # mergeしてないbranchを表示
+
   # log関連
   wc = whatchanged         # logに変更されたファイルも一緒に出す
   ls = log --stat          # logに変更されたファイルも一緒に出す
@@ -39,9 +40,13 @@
   lr = log origin          # originのlog
   oneline = log --pretty=oneline
   ranking = shortlog -s -n --no-merges
+
   # logをtree表示
   log-graph = log --graph --date=short --pretty=format:'%Cgreen%h %cd %Cblue%cn %Creset%s'
   log-all = log --graph --all --color --pretty='%x09%h %cn%x09%s %Cred%d%Creset'
+  logg = log --stat --pretty=format:'%Cblue%h %Cgreen%ar %Cred%an %Creset%s %Cred%d'
+  logn = log --name-only --pretty=format:'%Cblue%h %Cgreen%ar %Cred%an %Creset%s %Cred%d'
+  
   # diff関連
   dm = diff master           # masterとのdiff
   dw = diff --color-words    # 単語単位でいろつけてdiff
@@ -53,6 +58,11 @@
   d4 = diff HEAD~~~~         # HEADから4つ前とdiff
   d5 = diff HEAD~~~~~        # HEADから5つ前とdiff
   d10 = diff HEAD~~~~~~~~~~  # HEADから10前とdiff
+
+  #git svn
+  sd = "svn dcommit"
+  sr = "svn rebase"
+
   # mergeの際にconflictが起きたファイルを編集
   edit-unmerged = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; vim `f`"
   # mergeの際にconflictが起きたファイルをadd
@@ -60,4 +70,11 @@
   # grep関連
   gr = grep
   gn = grep -n
+
+#[difftool "sourcetree"]
+#	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+#	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
 
