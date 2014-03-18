@@ -1,0 +1,13 @@
+nnoremap L Lzz
+vnoremap L Lzz
+nnoremap H Hzz
+vnoremap H Hzz
+
+nnoremap gl :tabnext<CR>
+"nnoremap gh :tabprevious<CR>
+nnoremap gh :xccmd selectPreviousTab<CR>
+nnoremap gk :xccmd jumpToNextCounterpart<CR>
+nnoremap gj :xccmd jumpToPreviousCounterpart<CR>
+
+set clipboard=unnamed
+
