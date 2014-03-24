@@ -8,8 +8,9 @@ nnoremap gl :tabnext<CR>
 nnoremap gh :xccmd selectPreviousTab<CR>
 nnoremap gk :xccmd jumpToNextCounterpart<CR>
 nnoremap gj :xccmd jumpToPreviousCounterpart<CR>
+nnoremap <space>ff :xccmd openQuickly<CR>
 nnoremap <space>fs :xccmd showDocumentItemsMenu<CR>
-nnoremap <space>ff :xccmd showPreviousFilesHistoryMenu<CR>
+nnoremap <space>fm :xccmd showPreviousFilesHistoryMenu<CR>
 nnoremap <space>fg :xccmd showGroupFilesMenu<CR>
 
 set clipboard=unnamed
