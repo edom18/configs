@@ -5,6 +5,10 @@ alias de2='cd ~/dev/env2'
 alias de3='cd ~/dev/env3'
 alias de4='cd ~/dev/env4'
 
+alias ...='cd ../../'
+alias ....='cd ../../../'
+alias .....='cd ../../../'
+alias ......='cd ../../../../'
 
 
 
@@ -22,6 +26,9 @@ setopt auto_cd
 
 ## ファイル名で #, ~, ^ の 3 文字を正規表現として扱う
 #setopt extended_glob
+
+# 
+setopt nonomatch
 
 #-----------------------------
 # zstyle
@@ -59,14 +66,18 @@ export LSCOLORS=cxfxcxdxbxegedabagacad
 #-----------------------------
 alias v='open -a "MacVim.app"'
 alias w='open -a "WebStorm.app"'
-alias f='open -a "ForkLift.app"'
-#alias ps='open -a "Adobe Photoshop CS5.1.app"'
+#alias f='open -a "ForkLift.app"'
+alias x='open -a "Xcode.app"'
+alias g='git'
+alias gr='grunt'
+alias j='jobs'
 alias o='open'
 alias c='cat'
 #alias svnadd='svn add --force *'
 #alias svnadd='svn st | grep "^\?" | awk "{print $2}" | xargs svn add'
 #alias svnaddci='svn st | grep "^A" | awk "{print $2}" | xargs svn ci -m "added"'
 alias cp='gcp'
+alias mcs='gmcs'
 alias ll='ls -l'
 alias la='ls -la'
 alias lla='la -l'
@@ -112,6 +123,11 @@ bindkey -v
 ###############################################
 # Functions
 ###############################################
+
+function f() {
+    find . -type f -name "*$1*"
+}
+
 jsdoc() {
   JSDOCDIR='/Users/hiruma-kazuya/MyDesktop/tools/jsdoc_toolkit-2.4.0/jsdoc-toolkit'
   FROM=$1
@@ -219,6 +235,8 @@ PROMPT=$'%{\e[33m%}%~%{\e[00m%}
 
 autoload -U colors; colors
 
+# -------------------------------------------------------
+# Gitリポジトリを表示する関数 ここから↓
 function rprompt-git-current-branch {
         local name st color
 
@@ -248,15 +266,25 @@ function rprompt-git-current-branch {
 # プロンプトが表示されるたびにプロンプト文字列を評価、置換する
 setopt prompt_subst
 
+# Promptの右側に表示
 RPROMPT='[`rprompt-git-current-branch`%~]'
+
+# Gitリポジトリを表示する関数 ここまで↑
+# -------------------------------------------------------
+
 
 ###############################################
 # autoload                                    #
 ###############################################
 autoload zmv
 alias zmv='noglob zmv -W'
+
+fpath=(~/.zsh/completion $fpath)
+
+#autoload -U compinit
+#compinit
 autoload -Uz compinit
-compinit
+compinit -u
 autoload colors
 colors
 
@@ -281,24 +309,10 @@ bindkey "^P" history-beginning-search-backward-end
 bindkey "^N" history-beginning-search-forward-end
 
 
-# nvm と指定されたバージョンの Node.js がインストール済みの場合だけ
-# 設定を有効にする
-#if [[ -f ~/.nvm/nvm.sh ]]; then
-#  source ~/.nvm/nvm.sh
-#
-#  if which nvm >/dev/null 2>&1 ;then
-#    _nodejs_use_version="v0.6.17"
-#    if nvm ls | grep -F -e "${_nodejs_use_version}";then
-#      nvm use "${_nodejs_use_version}" >/dev/null
-#    fi  >/dev/null 2>&1
-#    unset _nodejs_use_version
-#  fi
-#fi
-
 # git completion
 autoload -U bashcompinit
 bashcompinit
-source ~/git-completion.bash
+#source ~/git-completion.bash
 
 
 
@@ -308,3 +322,71 @@ add-zsh-hook chpwd chpwd_recent_dirs
 zstyle ':chpwd:*' recent-dirs-max 5000
 zstyle ':chpwd:*' recent-dirs-default yes
 zstyle ':completion:*' recent-dirs-insert both
+
+source ~/.perlbrew/etc/bashrc
+
+#Git diff archiver
+function git_diff_archive() 
+{
+    local diff=""
+    local h="HEAD"
+    if [ $# -eq 1 ]; then
+        if expr "$1" : '[0-9]*' > /dev/null ; then
+            diff="HEAD HEAD~${1}"
+        else
+            diff="HEAD ${1}"
+        fi
+    elif [ $# -eq 2 ]; then
+        diff="${1} ${2}"
+        h=$1
+    fi
+    if [ "$diff" != "" ]; diff="git diff --name-only ${diff}"
+        git archive --format=zip --prefix=archive/ $h `eval $diff` -o archive.zip
+}
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+
+#for rbenv
+export PATH="/Users/edo/.rbenv/shims:${PATH}"
+source "/usr/local/Cellar/rbenv/0.4.0/libexec/../completions/rbenv.zsh"
+rbenv rehash 2>/dev/null
+rbenv() {
+  typeset command
+  command="$1"
+  if [ "$#" -gt 0 ]; then
+    shift
+  fi
+
+  case "$command" in
+  rehash|shell)
+    eval `rbenv "sh-$command" "$@"`;;
+  *)
+    command rbenv "$command" "$@";;
+  esac
+}
+
+
+
+# zaw
+source ~/zsh_plugins/zaw/zaw.zsh
+bindkey '^[d' zaw-cdr
+bindkey '^[g' zaw-git-branches
+bindkey '^[@' zaw-gitdir
+
+function zaw-src-gitdir () {
+  _dir=$(git rev-parse --show-cdup 2>/dev/null)
+  if [ $? -eq 0 ]
+  then
+    candidates=( $(git ls-files ${_dir} | perl -MFile::Basename -nle \
+                                               '$a{dirname $_}++; END{delete $a{"."}; print for sort keys %a}') )
+  fi
+  actions=("zaw-src-gitdir-cd")
+  act_descriptions=("change directory in git repos")
+}
+
+function zaw-src-gitdir-cd () {
+  BUFFER="cd $1"
+  zle accept-line
+}
+zaw-register-src -n gitdir zaw-src-gitdir
+
