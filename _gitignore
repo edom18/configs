@@ -1,0 +1,11 @@
+*~
+*.sw[op]
+.DS_Store
+.sass-cache
+*.back
+.idea
+node_modules
+DerivedData
+bower_components
+iOSInjectionProject
+__scripts__
