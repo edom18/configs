@@ -1,6 +1,6 @@
 [user]
-	name = edom18
-	email = edo.m18@gmail.com
+	name = ****
+	email = ****
 
 [color]
   # colorの設定(以下のコマンドは自動で色つける)
@@ -10,10 +10,13 @@
   interactive = auto
   grep = auto
 [push]
-  default = tracking       # defaultのpush先はtrackingしているリポジトリ
+	default = simple
 [core]
-	excludesfile = /Users/hiruma-kazuya/.gitignore
-  autocrlf = input                 # CRLFを自動変換
+	excludesfile = /Users/edo/.gitignore
+	autoCRLF = false
+	editor = /usr/bin/vim
+	precomposeunicode = true
+	quotepath = false
 [alias]
   st = status
   sh = show
@@ -71,10 +74,16 @@
   gr = grep
   gn = grep -n
 
+#driver for merging XCode project files
+[merge "mergepbx"]
+        name = XCode project files merger
+        driver = mergepbx %O %A %B
+
 #[difftool "sourcetree"]
 #	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 #	path = 
-[mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
+#[mergetool "sourcetree"]
+#	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+#	trustExitCode = true
+
 
