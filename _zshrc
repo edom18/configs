@@ -1,16 +1,3 @@
-#---------------------------
-# for project directories.
-alias de1='cd ~/dev/env1'
-alias de2='cd ~/dev/env2'
-alias de3='cd ~/dev/env3'
-alias de4='cd ~/dev/env4'
-
-alias ...='cd ../../'
-alias ....='cd ../../../'
-alias .....='cd ../../../'
-alias ......='cd ../../../../'
-
-
 
 #-----------------------------
 # command setting
@@ -61,58 +48,6 @@ export SVN_EDITOR="vim"
 export LSCOLORS=cxfxcxdxbxegedabagacad
 
 
-#-----------------------------
-#alias setting
-#-----------------------------
-alias v='open -a "MacVim.app"'
-alias w='open -a "WebStorm.app"'
-#alias f='open -a "ForkLift.app"'
-alias x='open -a "Xcode.app"'
-alias g='git'
-alias gr='grunt'
-alias j='jobs'
-alias o='open'
-alias c='cat'
-#alias svnadd='svn add --force *'
-#alias svnadd='svn st | grep "^\?" | awk "{print $2}" | xargs svn add'
-#alias svnaddci='svn st | grep "^A" | awk "{print $2}" | xargs svn ci -m "added"'
-alias cp='gcp'
-alias mcs='gmcs'
-alias ll='ls -l'
-alias la='ls -la'
-alias lla='la -l'
-alias ls='ls -GF'
-alias pwdcp='pwd | pbcopy'
-alias rehosts='sudo vi /etc/hosts'
-alias revhosts='sudo vi /etc/apache2/extra/httpd-vhosts.conf'
-alias rezsh='v ~/.zshrc'
-alias grep='grep --color=always'
-alias sastart='sass --watch .:.. > /dev/null 2> /dev/null < /dev/null &'
-alias ims="mdls -name kMDItemFSName -name kMDItemPixelWidth -name kMDItemPixelHeight"
-alias p='qlmanage -p "$@" >& /dev/null'
-#compass watch --output-style compressed sass/style.scss #一行に圧縮
-alias cmpstart='compass watch --output-style compressed ./ > /dev/null 2> /dev/null < /dev/null &'
-alias cmpstart2='compass watch ./ > /dev/null 2> /dev/null < /dev/null &'
-alias cmpcreate='compass create --sass-dir "scss" --css-dir "css" --javascripts-dir "js" --images-dir "img"'
-#iPhone with acceraleter.
-alias iphonea='CA_COLOR_OPAQUE=1 /Developer/Platforms/iPhoneSimulator.platform/Developer/Applications/iPhone\ Simulator.app/Contents/MacOS/iPhone\ Simulator'
-#synergys start command.
-alias systart='sudo synergys --config ~/synergy.conf'
-#pipe alias
-alias -g G='| grep'
-alias -g AS='| awk'
-alias -g X='| xargs'
-
-#for Git
-alias gst='git st -s -b' 
-alias glgg='git logg'
-
-#for Java
-alias java='java -Dfile.encoding=UTF-8'
-alias javac='javac -J-Dfile.encoding=utf-8'
-
-#for Cordova
-alias cdvcreate='~/Tools/Cordova/bin/create'
 
 #directory
 #CDPATH=:~
@@ -126,14 +61,6 @@ bindkey -v
 
 function f() {
     find . -type f -name "*$1*"
-}
-
-jsdoc() {
-  JSDOCDIR='/Users/hiruma-kazuya/MyDesktop/tools/jsdoc_toolkit-2.4.0/jsdoc-toolkit'
-  FROM=$1
-  shift
-  TO=$1
-  java -jar $JSDOCDIR/jsrun.jar $JSDOCDIR/app/run.js $FROM -t=$JSDOCDIR/templates/jsdoc -d=$PWD/../js-document/$TO -a
 }
 
 renameOv() {
@@ -170,44 +97,6 @@ renameOv() {
   done
 }
 
-svnadd() {
-  filelist=$(svn st | grep '^?' | awk '{print $2}' | tr '\012' ' ')
-  eval svn add $filelist
-}
-
-svnac() {
-  filelist=$(svn st | grep '^A' | awk '{print $2}')
-  filelist=$(echo ${filelist} | tr '\012' ' ')
-  eval svn ci -m 'added' $filelist
-}
-
-svnexci() {
-  local type=''
-  local message=''
-
-  while getopts ":t:m:" opt; do
-    case $opt in
-      t ) if [ -n "$OPTARG" ]; then
-            type=$OPTARG
-          fi;;
-      m ) if [ -n "$OPTARG" ]; then
-            message=$OPTARG
-          fi;;
-    esac
-  done
-
-  if [ -z "$message" ]; then
-    echo "No commit message."
-    return 1
-  fi
-
-  shift $(($OPTIND - 1))
-
-  filelist=$(svn st | grep "^$type" | awk '{print $2}')
-  filelist=$(echo ${filelist} | tr '\012' ' ')
-  eval svn ci -m "$message" $filelist
-}
-
 rename() {
   local from=$1
   local to=$2
@@ -229,45 +118,46 @@ rename() {
 #SPROMPT="%r is correct? [n,y,a,e]: "
 
 #set prompt color
-PROMPT=$'%{\e[33m%}%~%{\e[00m%}
-%{\e[36m%}%n@%m$%{\e[00m%} '
+# PROMPT=$'%{\e[33m%}%~%{\e[00m%}
+# %{\e[36m%}%n@%m$%{\e[00m%} '
+
 #RPROMPT=$'%{\e[33m%}[%~]%{\e[m%}'
 
 autoload -U colors; colors
 
 # -------------------------------------------------------
 # Gitリポジトリを表示する関数 ここから↓
-function rprompt-git-current-branch {
-        local name st color
-
-        if [[ "$PWD" =~ '/\.git(/.*)?$' ]]; then
-                return
-        fi
-        name=$(basename "`git symbolic-ref HEAD 2> /dev/null`")
-        if [[ -z $name ]]; then
-                return
-        fi
-        st=`git status 2> /dev/null`
-        if [[ -n `echo "$st" | grep "^nothing to"` ]]; then
-                color=${fg[green]}
-        elif [[ -n `echo "$st" | grep "^nothing added"` ]]; then
-                color=${fg[yellow]}
-        elif [[ -n `echo "$st" | grep "^# Untracked"` ]]; then
-                color=${fg_bold[red]}
-        else
-                color=${fg[red]}
-        fi
-
-        # %{...%} は囲まれた文字列がエスケープシーケンスであることを明示する
-        # これをしないと右プロンプトの位置がずれる
-        echo "%{$color%}$name%{$reset_color%} "
-}
+# function rprompt-git-current-branch {
+#         local name st color
+# 
+#         if [[ "$PWD" =~ '/\.git(/.*)?$' ]]; then
+#                 return
+#         fi
+#         name=$(basename "`git symbolic-ref HEAD 2> /dev/null`")
+#         if [[ -z $name ]]; then
+#                 return
+#         fi
+#         st=`git status 2> /dev/null`
+#         if [[ -n `echo "$st" | grep "^nothing to"` ]]; then
+#                 color=${fg[green]}
+#         elif [[ -n `echo "$st" | grep "^nothing added"` ]]; then
+#                 color=${fg[yellow]}
+#         elif [[ -n `echo "$st" | grep "^# Untracked"` ]]; then
+#                 color=${fg_bold[red]}
+#         else
+#                 color=${fg[red]}
+#         fi
+# 
+#         # %{...%} は囲まれた文字列がエスケープシーケンスであることを明示する
+#         # これをしないと右プロンプトの位置がずれる
+#         echo "%{$color%}$name%{$reset_color%} "
+# }
 
 # プロンプトが表示されるたびにプロンプト文字列を評価、置換する
-setopt prompt_subst
+# setopt prompt_subst
 
 # Promptの右側に表示
-RPROMPT='[`rprompt-git-current-branch`%~]'
+# RPROMPT='[`rprompt-git-current-branch`%~]'
 
 # Gitリポジトリを表示する関数 ここまで↑
 # -------------------------------------------------------
@@ -389,4 +279,154 @@ function zaw-src-gitdir-cd () {
   zle accept-line
 }
 zaw-register-src -n gitdir zaw-src-gitdir
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
+
+
+
+# Path to your oh-my-zsh installation.
+export ZSH=/Users/hiruma-kazuya/.oh-my-zsh
+
+# Set name of the theme to load.
+# Look in ~/.oh-my-zsh/themes/
+# Optionally, if you set this to "random", it'll load a random theme each
+# time that oh-my-zsh is loaded.
+# ZSH_THEME="robbyrussell"
+ZSH_THEME="fox"
+
+
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
+
+# Uncomment the following line to disable bi-weekly auto-update checks.
+# DISABLE_AUTO_UPDATE="true"
+
+# Uncomment the following line to change how often to auto-update (in days).
+# export UPDATE_ZSH_DAYS=13
+
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
+
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
+
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+# COMPLETION_WAITING_DOTS="true"
+
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# HIST_STAMPS="mm/dd/yyyy"
+
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
+
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(git)
+
+# User configuration
+
+# export MANPATH="/usr/local/man:$MANPATH"
+
+source $ZSH/oh-my-zsh.sh
+
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
+
+# Preferred editor for local and remote sessions
+# if [[ -n $SSH_CONNECTION ]]; then
+#   export EDITOR='vim'
+# else
+#   export EDITOR='mvim'
+# fi
+
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
+
+# ssh
+# export SSH_KEY_PATH="~/.ssh/dsa_id"
+
+# Set personal aliases, overriding those provided by oh-my-zsh libs,
+# plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# For a full list of active aliases, run `alias`.
+#
+# Example aliases
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
+
+function peco-select-history() {
+    local tac
+    if which tac > /dev/null; then
+        tac="tac"
+    else
+        tac="tail -r"
+    fi
+    BUFFER=$(\history -n 1 | \
+        eval $tac | \
+        peco --query "$LBUFFER")
+    CURSOR=$#BUFFER
+    zle clear-screen
+}
+zle -N peco-select-history
+bindkey '^r' peco-select-history
+
+
+#-----------------------------
+#alias setting
+#-----------------------------
+alias ...='cd ../../'
+alias ....='cd ../../../'
+alias .....='cd ../../../'
+alias ......='cd ../../../../'
+
+alias v='open -a "MacVim.app"'
+alias w='open -a "WebStorm.app"'
+alias x='open -a "Xcode.app"'
+alias g='git'
+alias gr='grunt'
+alias j='jobs'
+alias o='open'
+alias c='cat'
+alias cp='gcp'
+alias mcs='gmcs'
+alias ll='ls -l'
+alias la='ls -la'
+alias lla='la -l'
+alias ls='ls -GF'
+alias pwdcp='pwd | pbcopy'
+alias rehosts='sudo vi /etc/hosts'
+alias revhosts='sudo vi /etc/apache2/extra/httpd-vhosts.conf'
+alias rezsh='v ~/.zshrc'
+alias grep='grep --color=always'
+alias ims="mdls -name kMDItemFSName -name kMDItemPixelWidth -name kMDItemPixelHeight"
+alias p='qlmanage -p "$@" >& /dev/null'
+
+#pipe alias
+alias -g G='| grep'
+alias -g AS='| awk'
+alias -g X='| xargs'
+
+#for Git
+alias gst='git st -s -b' 
+alias glgg='git logg'
+
+#for Java
+alias java='java -Dfile.encoding=UTF-8'
+alias javac='javac -J-Dfile.encoding=utf-8'
+
+#for Cordova
+alias cdvcreate='~/Tools/Cordova/bin/create'
 
