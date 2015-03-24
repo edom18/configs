@@ -422,6 +422,7 @@ alias -g X='| xargs'
 #for Git
 alias gst='git st -s -b' 
 alias glgg='git logg'
+unalias gsta=''
 
 #for Java
 alias java='java -Dfile.encoding=UTF-8'
