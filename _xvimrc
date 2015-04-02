@@ -4,7 +4,7 @@ nnoremap H Hzz
 vnoremap H Hzz
 
 nnoremap gl :tabnext<CR>
-"nnoremap gh :tabprevious<CR>
+" nnoremap gh :tabprevious<CR>
 nnoremap gh :xccmd selectPreviousTab<CR>
 nnoremap gk :xccmd jumpToNextCounterpart<CR>
 nnoremap gj :xccmd jumpToPreviousCounterpart<CR>
@@ -12,6 +12,26 @@ nnoremap <space>ff :xccmd openQuickly<CR>
 nnoremap <space>fs :xccmd showDocumentItemsMenu<CR>
 nnoremap <space>fm :xccmd showPreviousFilesHistoryMenu<CR>
 nnoremap <space>fg :xccmd showGroupFilesMenu<CR>
+nnoremap <space>fr :xccmd showRelatedItemsMenu<CR>
+
+inoremap <silent>jj <ESC>
+
+" fold
+nnoremap gf :xccmd fold<CR>
+nnoremap gF :xccmd unfold<CR>
 
 set clipboard=unnamed
+
+"----------------------------------
+" for search
+"----------------------------------
+set ignorecase
+set hlsearch
+
+nnoremap \\ :noh<CR>
+
+nnoremap <space>a ggVG
+
+nnoremap <C-a> ggVG
+nnoremap <D-a> :noh<CR>
 
