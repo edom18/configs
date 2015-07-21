@@ -97,6 +97,7 @@ renameOv() {
   done
 }
 
+
 rename() {
   local from=$1
   local to=$2
@@ -174,7 +175,7 @@ fpath=(~/.zsh/completion $fpath)
 #autoload -U compinit
 #compinit
 autoload -Uz compinit
-compinit -u
+compinit -C
 autoload colors
 colors
 
@@ -213,7 +214,7 @@ zstyle ':chpwd:*' recent-dirs-max 5000
 zstyle ':chpwd:*' recent-dirs-default yes
 zstyle ':completion:*' recent-dirs-insert both
 
-source ~/.perlbrew/etc/bashrc
+# source ~/.perlbrew/etc/bashrc
 
 #Git diff archiver
 function git_diff_archive() 
@@ -237,48 +238,47 @@ function git_diff_archive()
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
 #for rbenv
-export PATH="/Users/edo/.rbenv/shims:${PATH}"
-source "/usr/local/Cellar/rbenv/0.4.0/libexec/../completions/rbenv.zsh"
-rbenv rehash 2>/dev/null
-rbenv() {
-  typeset command
-  command="$1"
-  if [ "$#" -gt 0 ]; then
-    shift
-  fi
-
-  case "$command" in
-  rehash|shell)
-    eval `rbenv "sh-$command" "$@"`;;
-  *)
-    command rbenv "$command" "$@";;
-  esac
-}
+# source "/usr/local/Cellar/rbenv/0.4.0/libexec/../completions/rbenv.zsh"
+# rbenv rehash 2>/dev/null
+# rbenv() {
+#   typeset command
+#   command="$1"
+#   if [ "$#" -gt 0 ]; then
+#     shift
+#   fi
+# 
+#   case "$command" in
+#   rehash|shell)
+#     eval `rbenv "sh-$command" "$@"`;;
+#   *)
+#     command rbenv "$command" "$@";;
+#   esac
+# }
 
 
 
 # zaw
-source ~/zsh_plugins/zaw/zaw.zsh
-bindkey '^[d' zaw-cdr
-bindkey '^[g' zaw-git-branches
-bindkey '^[@' zaw-gitdir
+# source ~/zsh_plugins/zaw/zaw.zsh
+# bindkey '^[d' zaw-cdr
+# bindkey '^[g' zaw-git-branches
+# bindkey '^[@' zaw-gitdir
 
-function zaw-src-gitdir () {
-  _dir=$(git rev-parse --show-cdup 2>/dev/null)
-  if [ $? -eq 0 ]
-  then
-    candidates=( $(git ls-files ${_dir} | perl -MFile::Basename -nle \
-                                               '$a{dirname $_}++; END{delete $a{"."}; print for sort keys %a}') )
-  fi
-  actions=("zaw-src-gitdir-cd")
-  act_descriptions=("change directory in git repos")
-}
+# function zaw-src-gitdir () {
+#   _dir=$(git rev-parse --show-cdup 2>/dev/null)
+#   if [ $? -eq 0 ]
+#   then
+#     candidates=( $(git ls-files ${_dir} | perl -MFile::Basename -nle \
+#                                                '$a{dirname $_}++; END{delete $a{"."}; print for sort keys %a}') )
+#   fi
+#   actions=("zaw-src-gitdir-cd")
+#   act_descriptions=("change directory in git repos")
+# }
 
-function zaw-src-gitdir-cd () {
-  BUFFER="cd $1"
-  zle accept-line
-}
-zaw-register-src -n gitdir zaw-src-gitdir
+# function zaw-src-gitdir-cd () {
+#   BUFFER="cd $1"
+#   zle accept-line
+# }
+#zaw-register-src -n gitdir zaw-src-gitdir
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
@@ -286,7 +286,7 @@ export PATH="/usr/local/heroku/bin:$PATH"
 
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/hiruma-kazuya/.oh-my-zsh
+export ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -315,7 +315,7 @@ ZSH_THEME="fox"
 # ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
+COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
@@ -338,6 +338,7 @@ plugins=(git)
 
 # User configuration
 
+export PATH="/usr/local/heroku/bin:/Users/edo/.rbenv/shims:$HOME/scala-2.11.6/bin/:/Users/edo/Development/adt-bundle-mac-x86_64-20140702/sdk/tools:/Users/edo/Development/adt-bundle-mac-x86_64-20140702/sdk/platform-tools:/Users/edo/Development/adt-bundle-mac-x86_64-20140702/sdk:/Users/edo/Development/adt-bundle-mac-x86_64-20140702/eclipse/android-ndk-r9d:/Users/edo/Library/cocos2d-x-3.2alpha0/tools/cocos2d-console/bin:$HOME/emsdk_portable/emscripten/1.29.0:/Applications/Xcode6-Beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin:/Users/edo/Development/adt-bundle-mac-x86_64-20140702/sdk/tools:/Users/edo/Development/adt-bundle-mac-x86_64-20140702/sdk/platform-tools:/Users/edo/scala-2.11.1/bin:/usr/local/bin:/Applications/adt-bundle-mac-x86_64-20131030/sdk/platform-tools:$HOME/.nodebrew/current/bin:$HOME/bin:$HOME/myCommand:$HOME/myCommand:$HOME/node_modules/coffee-script/bin:::::/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/.rvm/bin"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
@@ -400,27 +401,38 @@ alias gr='grunt'
 alias j='jobs'
 alias o='open'
 alias c='cat'
-alias cp='gcp'
+alias a='open -a "Atom.app"'
+# alias cp='gcp'
 alias mcs='gmcs'
 alias ll='ls -l'
 alias la='ls -la'
 alias lla='la -l'
 alias ls='ls -GF'
+alias zl='z -l'
 alias pwdcp='pwd | pbcopy'
 alias rehosts='sudo vi /etc/hosts'
 alias revhosts='sudo vi /etc/apache2/extra/httpd-vhosts.conf'
 alias rezsh='v ~/.zshrc'
 alias grep='grep --color=always'
+alias sastart='sass --watch .:.. > /dev/null 2> /dev/null < /dev/null &'
 alias ims="mdls -name kMDItemFSName -name kMDItemPixelWidth -name kMDItemPixelHeight"
 alias p='qlmanage -p "$@" >& /dev/null'
-
+alias libtoolize=glibtoolize
+#compass watch --output-style compressed sass/style.scss #一行に圧縮
+alias cmpstart='compass watch --output-style compressed ./ > /dev/null 2> /dev/null < /dev/null &'
+alias cmpstart2='compass watch ./ > /dev/null 2> /dev/null < /dev/null &'
+alias cmpcreate='compass create --sass-dir "scss" --css-dir "css" --javascripts-dir "js" --images-dir "img"'
+#iPhone with acceraleter.
+alias iphonea='CA_COLOR_OPAQUE=1 /Developer/Platforms/iPhoneSimulator.platform/Developer/Applications/iPhone\ Simulator.app/Contents/MacOS/iPhone\ Simulator'
+#synergys start command.
+alias systart='sudo synergys --config ~/synergy.conf'
 #pipe alias
 alias -g G='| grep'
 alias -g AS='| awk'
 alias -g X='| xargs'
 
 #for Git
-alias gst='git st -s -b' 
+alias gst='git st -s' 
 alias glgg='git logg'
 unalias gsta
 unalias gstd
@@ -431,4 +443,10 @@ alias javac='javac -J-Dfile.encoding=utf-8'
 
 #for Cordova
 alias cdvcreate='~/Tools/Cordova/bin/create'
+
+# if (which zprof > /dev/null) ;then
+#   zprof | less
+# fi
+
+source $HOME/zsh_plugins/z.sh
 
