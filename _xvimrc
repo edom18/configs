@@ -13,6 +13,7 @@ nnoremap <space>fs :xccmd showDocumentItemsMenu<CR>
 nnoremap <space>fm :xccmd showPreviousFilesHistoryMenu<CR>
 nnoremap <space>fg :xccmd showGroupFilesMenu<CR>
 nnoremap <space>fr :xccmd showRelatedItemsMenu<CR>
+nnoremap <space>ft :xccmd showGroupFilesMenu<CR>
 
 inoremap <silent>jj <ESC>
 
