@@ -1,0 +1,10 @@
+nmap <C-O> :vsc View.NavigateBackward<CR>
+nmap <C-I> :vsc View.NavigateForward<CR>
+nmap gD :vsc Edit.FindAllReferences<CR>
+nmap gi :vsc Edit.GoToImplementation<CR>
+nmap gh gT
+nmap gl gt
+
+// ナビゲーションバーをフォーカスする
+nmap <space>fs :vsc Window.MoveToNavigationBar<CR>
+nmap <space>fo :vsc Window.KeepTabOpen<CR>
