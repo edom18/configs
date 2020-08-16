@@ -1,2 +1,4 @@
 nnoremap gh gT
 nnoremap gl gt
+
+nnoremap <Space>fa :action SearchEverywhere<CR>
