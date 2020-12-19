@@ -2,3 +2,6 @@ nnoremap gh gT
 nnoremap gl gt
 
 nnoremap <Space>fa :action SearchEverywhere<CR>
+nnoremap <Space>fs :action ActivateStructureToolWindow<CR>
+
+set easymotion
