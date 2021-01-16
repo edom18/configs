@@ -1,0 +1,61 @@
+#-----------------------------
+#alias setting
+#-----------------------------
+alias ..='cd ..'
+alias ...='cd ../../'
+alias ....='cd ../../../'
+alias .....='cd ../../../'
+alias ......='cd ../../../../'
+
+alias o=explorer
+alias g=git
+alias gn='git number'
+alias gs='git number -s'
+alias ga='git number add'
+alias gd='git number diff'
+alias gv='git number -c vim'
+
+export LANG=ja_JP.UTF-8
+export PATH=$PATH:/d/MyDesktop/myCommands
+export PATH=$PATH:/d/MyDesktop/myCommands/git-number
+export PATH=$PATH:/d/MyDesktop/Apps/bin
+export PATH=$PATH:/d/MyDesktop/Apps/bin/ffmpeg
+export PATH=$PATH:/c/Users/edo_m/MagicLeap/mlsdk/v0.23.0/tools/mldb
+export PATH=$PATH:/c/Users/edo_m/AppData/Local/Android/Sdk/platform-tools
+export PATH=$PATH:/c/Users/edo_m/anaconda3
+export PATH=$PATH:/c/Users/edo_m/anaconda3/Scripts
+export PATH=$PATH:/c/Program\ Files/CMake/bin
+export PATH=$PATH:/d/MyDesktop/Apps/nodist/bin
+#export PATH=$PATH:/c/Program\ Files/nodejs
+#export PATH=$PATH:/c/Program\ Files\ \(x86\)/Nodist/bin/node_modules/koko/bin
+#export PATH=$PATH:/d/Program\ Files/mingw-w64/x86_64-7.2.0-win32-seh-rt_v5-rev1/mingw64/bin
+#export PATH=$PATH:/c/Program\ Files\ \(x86\)/GnuWin32/bin
+#export PATH=$PATH:/d/MyDesktop/Apps/opencv-4.3.0/build/install/x64/vc16/bin
+
+source $HOME/.git-completion.bash
+
+shopt -s nocaseglob
+
+cd ~
+
+eval   `ssh-agent`
+ssh-add
+
+# >>> conda init >>>
+__conda_setup="$(CONDA_REPORT_ERRORS=false '$HOME/anaconda3/bin/conda' shell.bash hook 2> /dev/null)"
+if [ $? -eq 0 ]; then
+	\eval "$__conda_setup"
+else
+	if [ -f "$HOME/anaconda3/etc/profile.d/conda.sh" ]; then
+		. "$HOME/anaconda3/etc/profile.d/conda.sh"
+		CONDA_CHANGEPS1=false conda activate base
+	else
+		\export PATH="$PATH:$HOME/anaconda3/bin"
+	fi
+fi
+
+unset __conda_setup
+
+# <<< conda init <<<
+
+NODIST_BIN_DIR__=$(echo "$NODIST_PREFIX" | sed -e 's,\\,/,g')/bin; if [ -f "$NODIST_BIN_DIR__/nodist.sh" ]; then . "$NODIST_BIN_DIR__/nodist.sh"; fi; unset NODIST_BIN_DIR__;
